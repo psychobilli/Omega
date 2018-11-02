@@ -33,6 +33,7 @@
     };
 
     var player;
+    var character;
     var sideStrike;
     var vertStrike;
     var cursors;
@@ -58,9 +59,11 @@
         walls.create(300,400, 'wall').setScale(0,50).refreshBody();
         walls.create(900,400, 'wall').setScale(0,50).refreshBody();
         
-        player = this.physics.add.sprite(600,400,'stickMan');
+        player = this.add.container();
+        character = this.physics.add.sprite(600,400,'stickMan');
         sideStrike = this.physics.add.sprite(600,400,'sideAttack');
-        vertStrike = this.physics.add.sprite(600,400,'vertAttack');
+        vertStrike = this.add.sprite(600,400,'vertAttack');
+        player.add([character,sideStrike,vertStrike]);
 
         this.anims.create({
             key: 'left',
@@ -91,35 +94,35 @@
 
         this.anims.create({
             key: 'leftAtt',
-            frame: this.anims.generateFrameNumbers('sideAttack', { start: 1, end: 0 }),
-            frameRate: 2,
+            frames: this.anims.generateFrameNumbers('sideAttack', { frames: [ 0, 1 ] }),
+            frameRate: 5,
             repeat: 0
         });
 
         this.anims.create({
             key: 'rightAtt',
-            frame: this.anims.generateFrameNumbers('sideAttack', { start: 1, end: 2 }),
-            frameRate: 2,
+            frames: this.anims.generateFrameNumbers('sideAttack', { frames: [ 2, 1 ] }),
+            frameRate: 5,
             repeat: 0
         });
 
         this.anims.create({
             key: 'upAtt',
-            frame: this.anims.generateFrameNumbers('vertAttack', { start: 1, end: 0 }),
-            frameRate: 2,
+            frames: this.anims.generateFrameNumbers('vertAttack', { frames: [ 0, 1 ] }),
+            frameRate: 5,
             repeat: 0
         });
 
         this.anims.create({
             key: 'downAtt',
-            frame: this.anims.generateFrameNumbers('vertAttack', { start: 1, end: 2 }),
-            frameRate: 2,
+            frames: this.anims.generateFrameNumbers('vertAttack', { frames: [ 2, 1 ] }),
+            frameRate: 5,
             repeat: 0
         });
 
         cursors = this.input.keyboard.createCursorKeys();
 
-        this.physics.add.collider(player, walls);
+        this.physics.add.collider(character, walls);
     }
 
     function update()
@@ -127,41 +130,41 @@
         if (cursors.left.isDown)
         {
             face = 0;
-            player.setVelocityX(-160);
-            player.setVelocityY(0);
+            character.setVelocityX(-160);
+            character.setVelocityY(0);
 
-            player.anims.play('left', true);
+            character.anims.play('left', true);
         }
         else if (cursors.right.isDown)
         {
             face = 1;
-            player.setVelocityX(160);
-            player.setVelocityY(0);
+            character.setVelocityX(160);
+            character.setVelocityY(0);
 
-            player.anims.play('right', true);
+            character.anims.play('right', true);
         }
         else if (cursors.up.isDown)
         {
             face = 2;
-            player.setVelocityX(0);
-            player.setVelocityY(-160);
+            character.setVelocityX(0);
+            character.setVelocityY(-160);
 
-            player.anims.play('upDown',true);
+            character.anims.play('upDown',true);
         }
         else if (cursors.down.isDown)
         {
             face = 3;
-            player.setVelocityX(0);
-            player.setVelocityY(160);
+            character.setVelocityX(0);
+            character.setVelocityY(160);
 
-            player.anims.play('upDown',true);
+            character.anims.play('upDown',true);
         } 
         else
         {
-            player.setVelocityX(0);
-            player.setVelocityY(0);
+            character.setVelocityX(0);
+            character.setVelocityY(0);
 
-            player.anims.play('turn');
+            character.anims.play('turn');
         }
 
         if (cursors.space.isDown) 
@@ -169,16 +172,16 @@
             switch(face) 
             {
                 case 0:
-                    sideStrike.anims.play('leftAtt',false);
+                    sideStrike.anims.play('leftAtt');
                     break;
                 case 1:
-                    sideStrike.anims.play('rightAtt',false);
+                    sideStrike.anims.play('rightAtt');
                     break;
                 case 2:
-                    vertStrike.anims.play('upAtt',false);
+                    vertStrike.anims.play('upAtt');
                     break;
                 case 3:
-                    vertStrike.anims.play('downAtt',false);
+                    vertStrike.anims.play('downAtt');
                     break;
             }
         }
