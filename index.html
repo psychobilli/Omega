@@ -61,8 +61,8 @@
         
         player = this.add.container();
         character = this.physics.add.sprite(600,400,'stickMan');
-        sideStrike = this.physics.add.sprite(600,400,'sideAttack');
-        vertStrike = this.add.sprite(600,400,'vertAttack');
+        sideStrike = this.physics.add.sprite(600,400,'sideAttack', 1);
+        vertStrike = this.add.sprite(600,400,'vertAttack', 1);
         player.add([character,sideStrike,vertStrike]);
 
         this.anims.create({
@@ -95,28 +95,28 @@
         this.anims.create({
             key: 'leftAtt',
             frames: this.anims.generateFrameNumbers('sideAttack', { frames: [ 0, 1 ] }),
-            frameRate: 5,
+            frameRate: 10,
             repeat: 0
         });
 
         this.anims.create({
             key: 'rightAtt',
             frames: this.anims.generateFrameNumbers('sideAttack', { frames: [ 2, 1 ] }),
-            frameRate: 5,
+            frameRate: 10,
             repeat: 0
         });
 
         this.anims.create({
             key: 'upAtt',
             frames: this.anims.generateFrameNumbers('vertAttack', { frames: [ 0, 1 ] }),
-            frameRate: 5,
+            frameRate: 10,
             repeat: 0
         });
 
         this.anims.create({
             key: 'downAtt',
             frames: this.anims.generateFrameNumbers('vertAttack', { frames: [ 2, 1 ] }),
-            frameRate: 5,
+            frameRate: 10,
             repeat: 0
         });
 
@@ -172,15 +172,19 @@
             switch(face) 
             {
                 case 0:
+                    sideStrike.setPosition(character.x - 20, character.y);
                     sideStrike.anims.play('leftAtt');
                     break;
                 case 1:
+                    sideStrike.setPosition(character.x + 20, character.y);
                     sideStrike.anims.play('rightAtt');
                     break;
                 case 2:
+                    vertStrike.setPosition(character.x, character.y - 40);
                     vertStrike.anims.play('upAtt');
                     break;
                 case 3:
+                    vertStrike.setPosition(character.x, character.y + 40);
                     vertStrike.anims.play('downAtt');
                     break;
             }
