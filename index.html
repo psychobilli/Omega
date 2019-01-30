@@ -5,6 +5,7 @@
     <title>Omega</title>
     <script src="node_modules/phaser/dist/phaser.min.js"></script>
     <script src="node_modules/phaser/dist/phaser-arcade-physics.min.js"></script>
+    <script src="scenes/title.js"></script>
     <script src="scenes/game.js"></script>
     <script src="characters/player.js"></script>
     <style type="text/css">
@@ -27,7 +28,7 @@
                 debug: false
             }
         },
-        scene: gameScene
+        scene: [titleScene, gameScene]
     };
 
     var game = new Phaser.Game(config);
