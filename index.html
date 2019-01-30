@@ -5,6 +5,7 @@
     <title>Omega</title>
     <script src="node_modules/phaser/dist/phaser.min.js"></script>
     <script src="node_modules/phaser/dist/phaser-arcade-physics.min.js"></script>
+    <script src="scenes/game.js"></script>
     <script src="characters/player.js"></script>
     <style type="text/css">
         body {
@@ -26,44 +27,10 @@
                 debug: false
             }
         },
-        scene: {
-            preload: preload,
-            create: create,
-            update: update
-        }
+        scene: gameScene
     };
 
-    var player = new Player();
-    var cursors;
-    var walls;
-
     var game = new Phaser.Game(config);
-
-    function preload()
-    {
-        this.load.image('forest','assets/images/forest.png');
-        player.preload(this);
-        this.load.image('wall',null);
-    }
-
-    function create()
-    {
-        this.add.image(600,400,'forest');
-        walls = this.physics.add.staticGroup();
-        walls.create(300,400, 'wall').setScale(0,50).refreshBody();
-        walls.create(900,400, 'wall').setScale(0,50).refreshBody();
-
-        player.create(this);
-
-        cursors = this.input.keyboard.createCursorKeys();
-
-        this.physics.add.collider(player.sprite, walls);
-    }
-
-    function update()
-    {
-        player.update(cursors);
-    }
 
 </script>
 
