@@ -14,9 +14,9 @@ class Player {
     }
 
     create(main) {
-        this._sprite = main.physics.add.sprite(600,400,'stickMan');
-        this._sideStrike = main.physics.add.sprite(600,400,'sideAttack', 1);
-        this._vertStrike = main.physics.add.sprite(600,400,'vertAttack', 1);
+        this._sprite = main.matter.add.sprite(600,400,'stickMan');
+        this._sideStrike = main.matter.add.sprite(600,400,'sideAttack', 1);
+        this._vertStrike = main.matter.add.sprite(600,400,'vertAttack', 1);
 
         main.anims.create({
             key: 'left',
@@ -78,7 +78,7 @@ class Player {
         if (cursors.left.isDown)
             {
                 this._face = 0;
-                this._sprite.setVelocityX(-160);
+                this._sprite.setVelocityX(-16);
                 this._sprite.setVelocityY(0);
 
                 this._sprite.anims.play('left', true);
@@ -86,7 +86,7 @@ class Player {
             else if (cursors.right.isDown)
             {
                 this._face = 1;
-                this._sprite.setVelocityX(160);
+                this._sprite.setVelocityX(16);
                 this._sprite.setVelocityY(0);
 
                 this._sprite.anims.play('right', true);
@@ -95,7 +95,7 @@ class Player {
             {
                 this._face = 2;
                 this._sprite.setVelocityX(0);
-                this._sprite.setVelocityY(-160);
+                this._sprite.setVelocityY(-16);
 
                 this._sprite.anims.play('upDown',true);
             }
@@ -103,7 +103,7 @@ class Player {
             {
                 this._face = 3;
                 this._sprite.setVelocityX(0);
-                this._sprite.setVelocityY(160);
+                this._sprite.setVelocityY(16);
 
                 this._sprite.anims.play('upDown',true);
             } 
@@ -141,5 +141,9 @@ class Player {
 
     get sprite() {
         return this._sprite;
+    }
+
+    get position() {
+        return this._sprite.position();
     }
 }
