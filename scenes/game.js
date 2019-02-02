@@ -39,14 +39,14 @@ class gameScene extends Phaser.Scene {
         // this._rock.setFrictionX(100);
         // this.matter.add.collider(this._player.sprite, this._walls);
         // this.matter.add.collider(this._rock, this._walls);
-
+        
         const exit = this.add.image(1000, 100, 'exit');
         exit.setInteractive().on('pointerup', this.exitGame, this);
     }
 
     update()
     {
-        console.log('gameScene update');
+        console.log('gameScene Update');
         this._player.update(this._cursors);
     }
 
