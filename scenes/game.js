@@ -33,7 +33,8 @@ class gameScene extends Phaser.Scene {
 
         this._cursors = this.input.keyboard.createCursorKeys();
 
-        this.physics.add.collider(this._player.sprite, this._rock);
+        this.physics.add.collider(this._player.sprite, this._rock, this.playerRock, null, this);
+        this._rock.setDrag(100,100);
         this.physics.add.collider(this._rock, this._walls);
         this.physics.add.collider(this._player.sprite, this._walls);
         
@@ -52,4 +53,32 @@ class gameScene extends Phaser.Scene {
         this.scene.start('titleScene');
     }
 
+    playerRock() {
+        console.log('collision detected');
+        if (this._cursors.left.isDown)
+        {
+            this._rock.setVelocityX(-160);
+            this._rock.setVelocityY(0);
+        }
+        else if (this._cursors.right.isDown)
+        {
+            this._rock.setVelocityX(160);
+            this._rock.setVelocityY(0);
+        }
+        else if (this._cursors.up.isDown)
+        {
+            this._rock.setVelocityX(0);
+            this._rock.setVelocityY(-160);
+        }
+        else if (this._cursors.down.isDown)
+        {
+            this._rock.setVelocityX(0);
+            this._rock.setVelocityY(160);
+        } 
+        else
+        {
+            this._rock.setVelocityX(0);
+            this._rock.setVelocityY(0);
+        }
+    }
 }
