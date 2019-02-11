@@ -14,9 +14,13 @@ class gameScene extends Phaser.Scene {
         console.log('gameScene Preload');
         this._player = new Player();
         this.load.image('forest','assets/images/forest.png');
+        
         this._player.preload(this);
         this.load.image('wall',null);
-        this.load.image('rock','assets/images/rock.png');
+
+        this._rock = new ActionObject();
+        this._rock.preload(this, 'assets/images/rock.png');
+
         this.load.image('exit','assets/images/Exit.png');
     }
 
@@ -24,7 +28,7 @@ class gameScene extends Phaser.Scene {
     {
         console.log('gameScene Create');
         this.add.image(600,400,'forest');
-        this._rock = this.physics.add.image(600,200,'rock');
+        this._rock.create(600, 200); 
         this._walls = this.physics.add.staticGroup();
         this._walls.create(300,400, 'wall').setScale(0,50).refreshBody();
         this._walls.create(900,400, 'wall').setScale(0,50).refreshBody();
@@ -33,9 +37,8 @@ class gameScene extends Phaser.Scene {
 
         this._cursors = this.input.keyboard.createCursorKeys();
 
-        this.physics.add.collider(this._player.sprite, this._rock, this.playerRock, null, this);
-        this._rock.setDrag(100,100);
-        this.physics.add.collider(this._rock, this._walls);
+        this._rock.addPush(this._player.sprite, this._cursors);
+        this.physics.add.collider(this._rock.image, this._walls);
         this.physics.add.collider(this._player.sprite, this._walls);
         
         const exit = this.add.image(1000, 100, 'exit');
@@ -51,34 +54,5 @@ class gameScene extends Phaser.Scene {
 
     exitGame() {
         this.scene.start('titleScene');
-    }
-
-    playerRock() {
-        console.log('collision detected');
-        if (this._cursors.left.isDown)
-        {
-            this._rock.setVelocityX(-160);
-            this._rock.setVelocityY(0);
-        }
-        else if (this._cursors.right.isDown)
-        {
-            this._rock.setVelocityX(160);
-            this._rock.setVelocityY(0);
-        }
-        else if (this._cursors.up.isDown)
-        {
-            this._rock.setVelocityX(0);
-            this._rock.setVelocityY(-160);
-        }
-        else if (this._cursors.down.isDown)
-        {
-            this._rock.setVelocityX(0);
-            this._rock.setVelocityY(160);
-        } 
-        else
-        {
-            this._rock.setVelocityX(0);
-            this._rock.setVelocityY(0);
-        }
     }
 }
