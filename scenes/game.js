@@ -16,7 +16,6 @@ class gameScene extends Phaser.Scene {
         this.load.image('forest','assets/images/forest.png');
         
         this._player.preload(this);
-        this.load.image('wall',null);
 
         this._rock = new ActionObject();
         this._rock.preload(this, 'assets/images/rock.png');
@@ -30,8 +29,8 @@ class gameScene extends Phaser.Scene {
         this.add.image(600,400,'forest');
         this._rock.create(600, 200); 
         this._walls = this.physics.add.staticGroup();
-        this._walls.create(300,400, 'wall').setScale(0,50).refreshBody();
-        this._walls.create(900,400, 'wall').setScale(0,50).refreshBody();
+       this._walls.create(300,400).setScale(0,50).refreshBody();
+       this._walls.create(900,400).setScale(0,50).refreshBody();
 
         this._player.create(this);
 
