@@ -76,67 +76,67 @@ class Player {
 
     update(cursors) {
         if (cursors.left.isDown)
-            {
-                this._face = 0;
-                this._sprite.setVelocityX(-160);
-                this._sprite.setVelocityY(0);
+        {
+            this._face = 0;
+            this._sprite.setVelocityX(-160);
+            this._sprite.setVelocityY(0);
 
-                this._sprite.anims.play('left', true);
+            this._sprite.anims.play('left', true);
+        }
+        else if (cursors.right.isDown)
+        {
+            this._face = 1;
+            this._sprite.setVelocityX(160);
+            this._sprite.setVelocityY(0);
+
+            this._sprite.anims.play('right', true);
+        }
+        else if (cursors.up.isDown)
+        {
+            this._face = 2;
+            this._sprite.setVelocityX(0);
+            this._sprite.setVelocityY(-160);
+
+            this._sprite.anims.play('upDown',true);
+        }
+        else if (cursors.down.isDown)
+        {
+            this._face = 3;
+            this._sprite.setVelocityX(0);
+            this._sprite.setVelocityY(160);
+
+            this._sprite.anims.play('upDown',true);
+        } 
+        else
+        {
+            this._sprite.setVelocityX(0);
+            this._sprite.setVelocityY(0);
+
+            this._sprite.anims.play('turn');
+        }
+
+        if (cursors.space.isDown) 
+        {
+            switch(this._face) 
+            {
+                case 0:
+                    this._sideStrike.setPosition(this._sprite.x - 20, this._sprite.y);
+                    this._sideStrike.anims.play('leftAtt');
+                    break;
+                case 1:
+                    this._sideStrike.setPosition(this._sprite.x + 20, this._sprite.y);
+                    this._sideStrike.anims.play('rightAtt');
+                    break;
+                case 2:
+                    this._vertStrike.setPosition(this._sprite.x, this._sprite.y - 40);
+                    this._vertStrike.anims.play('upAtt');
+                    break;
+                case 3:
+                    this._vertStrike.setPosition(this._sprite.x, this._sprite.y + 40);
+                    this._vertStrike.anims.play('downAtt');
+                    break;
             }
-            else if (cursors.right.isDown)
-            {
-                this._face = 1;
-                this._sprite.setVelocityX(160);
-                this._sprite.setVelocityY(0);
-
-                this._sprite.anims.play('right', true);
-            }
-            else if (cursors.up.isDown)
-            {
-                this._face = 2;
-                this._sprite.setVelocityX(0);
-                this._sprite.setVelocityY(-160);
-
-                this._sprite.anims.play('upDown',true);
-            }
-            else if (cursors.down.isDown)
-            {
-                this._face = 3;
-                this._sprite.setVelocityX(0);
-                this._sprite.setVelocityY(160);
-
-                this._sprite.anims.play('upDown',true);
-            } 
-            else
-            {
-                this._sprite.setVelocityX(0);
-                this._sprite.setVelocityY(0);
-
-                this._sprite.anims.play('turn');
-            }
-
-            if (cursors.space.isDown) 
-            {
-                switch(this._face) 
-                {
-                    case 0:
-                        this._sideStrike.setPosition(this._sprite.x - 20, this._sprite.y);
-                        this._sideStrike.anims.play('leftAtt');
-                        break;
-                    case 1:
-                        this._sideStrike.setPosition(this._sprite.x + 20, this._sprite.y);
-                        this._sideStrike.anims.play('rightAtt');
-                        break;
-                    case 2:
-                        this._vertStrike.setPosition(this._sprite.x, this._sprite.y - 40);
-                        this._vertStrike.anims.play('upAtt');
-                        break;
-                    case 3:
-                        this._vertStrike.setPosition(this._sprite.x, this._sprite.y + 40);
-                        this._vertStrike.anims.play('downAtt');
-                        break;
-                }
-            }
+        }
     }
 
     get sprite() {
