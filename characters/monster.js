@@ -1,16 +1,19 @@
-class Monster {
+class Monster extends Phaser.Physics.Arcade.Sprite {
 
-    constructor() {
-        this.sprite;
+    constructor(scene, x, y) {
+        super(scene, x, y, 'monster');
         this.beat;
+        this.damagePoints = 1;
+
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
     }
 
     preload(main) {
-        main.load.spritesheet('monster', 'assets/images/Monster.png', { frameWidth: 50, frameHeight: 60 });
+
     }
 
     create(main) {
-        this._sprite = main.physics.add.sprite(600,400,'monster');
         this._beat = 0;
 
         main.anims.create({
@@ -48,28 +51,28 @@ class Monster {
             var next = Math.floor(Math.random() * (max - min) + min);
             switch (next) {
                 case 0:
-                    this._sprite.setVelocityX(-160);
-                    this._sprite.setVelocityY(0);
+                    this.setVelocityX(-160);
+                    this.setVelocityY(0);
 
-                    this._sprite.anims.play('monsterleft', true);
+                    this.anims.play('monsterleft', true);
                     break;
                 case 1:
-                    this._sprite.setVelocityX(160);
-                    this._sprite.setVelocityY(0);
+                    this.setVelocityX(160);
+                    this.setVelocityY(0);
 
-                    this._sprite.anims.playReverse('monsterright', true);
+                    this.anims.playReverse('monsterright', true);
                     break;
                 case 2:
-                    this._sprite.setVelocityX(0);
-                    this._sprite.setVelocityY(160);
+                    this.setVelocityX(0);
+                    this.setVelocityY(160);
 
-                    this._sprite.anims.play('monsterupDown', true);
+                    this.anims.play('monsterupDown', true);
                     break;
                 case 3:
-                    this._sprite.setVelocityX(0);
-                    this._sprite.setVelocityY(-160);
+                    this.setVelocityX(0);
+                    this.setVelocityY(-160);
 
-                    this._sprite.anims.playReverse('monsterupDown', true);
+                    this.anims.playReverse('monsterupDown', true);
                     break;
                 default:
                     break;
@@ -78,9 +81,5 @@ class Monster {
         this._beat++;
         if (this._beat > 30)
             this._beat = 0;
-    }
-
-    get sprite() {
-        return this._sprite;
     }
 }

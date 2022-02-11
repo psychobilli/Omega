@@ -13,12 +13,11 @@ class gameScene extends Phaser.Scene {
     preload()
     {
         console.log('gameScene Preload');
-        this._player = new Player();
-        this._monster = new Monster();
+        this.load.spritesheet('stickMan', 'assets/images/StickMan.png', { frameWidth: 50, frameHeight: 60 });
+        this.load.spritesheet('sideAttack', 'assets/images/SideAttack.png', { frameWidth: 100, frameHeight: 60 });
+        this.load.spritesheet('vertAttack', 'assets/images/VertAttack.png', { frameWidth: 50, frameHeight: 120 });
+        this.load.spritesheet('monster', 'assets/images/Monster.png', { frameWidth: 50, frameHeight: 60 });
         this.load.image('forest','assets/images/forest.png');
-        
-        this._player.preload(this);
-        this._monster.preload(this);
 
         this._rock = new ActionObject();
         this._rock.preload(this, 'assets/images/rock.png');
@@ -35,16 +34,25 @@ class gameScene extends Phaser.Scene {
         this._walls.create(300,400).setScale(0,50).refreshBody();
         this._walls.create(900,400).setScale(0,50).refreshBody();
 
+        this._player = new Player(this, 600,400);
+        this._monster = new Monster(this, 800,100);
         this._player.create(this);
         this._monster.create(this);
 
         this._cursors = this.input.keyboard.createCursorKeys();
 
-        this._rock.addPush(this._player.sprite, this._cursors);
+        this._rock.addPush(this._player, this._cursors);
         this.physics.add.collider(this._rock.image, this._walls);
-        this.physics.add.collider(this._player.sprite, this._walls);
-        this.physics.add.collider(this._monster.sprite, this._walls);
-        this._monster.sprite.setCollideWorldBounds(true);
+        this.physics.add.collider(this._player, this._walls);
+        this.physics.add.collider(this._monster, this._walls);
+        this._monster.setCollideWorldBounds(true);
+
+        var hit = 0;
+        this.physics.add.overlap(this._player, this._monster,
+            function(_player, _monster) {
+                console.log(_monster.damagePoints);
+                _player.dealDamage(_monster.damagePoints);
+            });
         
         const exit = this.add.image(1000, 100, 'exit');
         exit.setInteractive();

@@ -1,20 +1,21 @@
-class Player {
+class Player extends Phaser.Physics.Arcade.Sprite {
 
-    constructor() {
-        this.sprite;
+    constructor(scene, x, y) {
+        super(scene, x, y,'stickMan');
         this.face = 3;
+        this.health = 10;
         this.sideStrike;
         this.vertStrike;
+
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
     }
 
     preload(main) {
-        main.load.spritesheet('stickMan', 'assets/images/StickMan.png', { frameWidth: 50, frameHeight: 60 });
-        main.load.spritesheet('sideAttack', 'assets/images/SideAttack.png', { frameWidth: 100, frameHeight: 60 });
-        main.load.spritesheet('vertAttack', 'assets/images/VertAttack.png', { frameWidth: 50, frameHeight: 120 });
+
     }
 
     create(main) {
-        this._sprite = main.physics.add.sprite(600,400,'stickMan');
         this._sideStrike = main.physics.add.sprite(600,400,'sideAttack', 1);
         this._vertStrike = main.physics.add.sprite(600,400,'vertAttack', 1);
 
@@ -78,41 +79,41 @@ class Player {
         if (cursors.left.isDown)
         {
             this._face = 0;
-            this._sprite.setVelocityX(-160);
-            this._sprite.setVelocityY(0);
+            this.setVelocityX(-160);
+            this.setVelocityY(0);
 
-            this._sprite.anims.play('left', true);
+            this.anims.play('left', true);
         }
         else if (cursors.right.isDown)
         {
             this._face = 1;
-            this._sprite.setVelocityX(160);
-            this._sprite.setVelocityY(0);
+            this.setVelocityX(160);
+            this.setVelocityY(0);
 
-            this._sprite.anims.play('right', true);
+            this.anims.play('right', true);
         }
         else if (cursors.up.isDown)
         {
             this._face = 2;
-            this._sprite.setVelocityX(0);
-            this._sprite.setVelocityY(-160);
+            this.setVelocityX(0);
+            this.setVelocityY(-160);
 
-            this._sprite.anims.play('upDown',true);
+            this.anims.play('upDown',true);
         }
         else if (cursors.down.isDown)
         {
             this._face = 3;
-            this._sprite.setVelocityX(0);
-            this._sprite.setVelocityY(160);
+            this.setVelocityX(0);
+            this.setVelocityY(160);
 
-            this._sprite.anims.play('upDown',true);
+            this.anims.play('upDown',true);
         } 
         else
         {
-            this._sprite.setVelocityX(0);
-            this._sprite.setVelocityY(0);
+            this.setVelocityX(0);
+            this.setVelocityY(0);
 
-            this._sprite.anims.play('turn');
+            this.anims.play('turn');
         }
 
         if (cursors.space.isDown) 
@@ -120,26 +121,33 @@ class Player {
             switch(this._face) 
             {
                 case 0:
-                    this._sideStrike.setPosition(this._sprite.x - 20, this._sprite.y);
+                    this._sideStrike.setPosition(this.x - 20, this.y);
                     this._sideStrike.anims.play('leftAtt');
                     break;
                 case 1:
-                    this._sideStrike.setPosition(this._sprite.x + 20, this._sprite.y);
+                    this._sideStrike.setPosition(this.x + 20, this.y);
                     this._sideStrike.anims.play('rightAtt');
                     break;
                 case 2:
-                    this._vertStrike.setPosition(this._sprite.x, this._sprite.y - 40);
+                    this._vertStrike.setPosition(this.x, this.y - 40);
                     this._vertStrike.anims.play('upAtt');
                     break;
                 case 3:
-                    this._vertStrike.setPosition(this._sprite.x, this._sprite.y + 40);
+                    this._vertStrike.setPosition(this.x, this.y + 40);
                     this._vertStrike.anims.play('downAtt');
                     break;
             }
         }
     }
 
-    get sprite() {
-        return this._sprite;
+    dealDamage(damage) {
+        if (this.health > 0) {
+            this.health = this.health - damage;
+            console.log('You have taken damage. Health: ' + this.health);
+        }
+        if (this.health == 0) {
+            this.health--;
+            console.log('You are dead.');
+        }
     }
 }
