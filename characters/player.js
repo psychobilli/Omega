@@ -2,8 +2,12 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     constructor(scene, x, y) {
         super(scene, x, y,'stickMan');
+        this.scene = scene;
         this.face = 3;
         this.health = 10;
+        this.healthBoxes = [];
+        this.stopDamage = false;
+        this.timer;
         this.sideStrike;
         this.vertStrike;
 
@@ -11,65 +15,67 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
     }
 
-    preload(main) {
-
+    static preload(scene) {
+        scene.load.spritesheet('stickMan', 'assets/images/StickMan.png', { frameWidth: 50, frameHeight: 60 });
+        scene.load.spritesheet('sideAttack', 'assets/images/SideAttack.png', { frameWidth: 100, frameHeight: 60 });
+        scene.load.spritesheet('vertAttack', 'assets/images/VertAttack.png', { frameWidth: 50, frameHeight: 120 });
+        scene.load.image('health','assets/images/HealthBox.png');
+        scene.load.image('healthEmpty','assets/images/HealthBoxEmpty.png');
     }
 
-    create(main) {
-        this._sideStrike = main.physics.add.sprite(600,400,'sideAttack', 1);
-        this._vertStrike = main.physics.add.sprite(600,400,'vertAttack', 1);
-
-        main.anims.create({
+    create() {
+        this.setupHealthBar();
+        this.scene.anims.create({
             key: 'left',
-            frames: main.anims.generateFrameNumbers('stickMan', { start: 0, end: 1 }),
+            frames: this.scene.anims.generateFrameNumbers('stickMan', { start: 0, end: 1 }),
             frameRate: 10,
             repeat: -1
         });
 
-        main.anims.create({
+        this.scene.anims.create({
             key: 'turn',
             frames: [ { key: 'stickMan', frame: 3 } ],
             frameRate: 20
         });
 
-        main.anims.create({
+        this.scene.anims.create({
             key: 'right',
-            frames: main.anims.generateFrameNumbers('stickMan', { start: 5, end: 6 }),
+            frames: this.scene.anims.generateFrameNumbers('stickMan', { start: 5, end: 6 }),
             frameRate: 10,
             repeat: -1
         });
 
-        main.anims.create({
+        this.scene.anims.create({
             key: 'upDown',
-            frames: main.anims.generateFrameNumbers('stickMan', { start: 2, end: 4, first: 3 }),
+            frames: this.scene.anims.generateFrameNumbers('stickMan', { start: 2, end: 4, first: 3 }),
             frameRate: 10,
             repeat: -1
         });
 
-        main.anims.create({
+        this.scene.anims.create({
             key: 'leftAtt',
-            frames: main.anims.generateFrameNumbers('sideAttack', { frames: [ 0, 1 ] }),
+            frames: this.scene.anims.generateFrameNumbers('sideAttack', { frames: [ 0, 1 ] }),
             frameRate: 10,
             repeat: 0
         });
 
-        main.anims.create({
+        this.scene.anims.create({
             key: 'rightAtt',
-            frames: main.anims.generateFrameNumbers('sideAttack', { frames: [ 2, 1 ] }),
+            frames: this.scene.anims.generateFrameNumbers('sideAttack', { frames: [ 2, 1 ] }),
             frameRate: 10,
             repeat: 0
         });
 
-        main.anims.create({
+        this.scene.anims.create({
             key: 'upAtt',
-            frames: main.anims.generateFrameNumbers('vertAttack', { frames: [ 0, 1 ] }),
+            frames: this.scene.anims.generateFrameNumbers('vertAttack', { frames: [ 0, 1 ] }),
             frameRate: 10,
             repeat: 0
         });
 
-        main.anims.create({
+        this.scene.anims.create({
             key: 'downAtt',
-            frames: main.anims.generateFrameNumbers('vertAttack', { frames: [ 2, 1 ] }),
+            frames: this.scene.anims.generateFrameNumbers('vertAttack', { frames: [ 2, 1 ] }),
             frameRate: 10,
             repeat: 0
         });
@@ -140,14 +146,43 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    setupHealthBar() {
+        var x = 40;
+        var y = 40;
+        this.healthBoxes[0] = this.scene.add.image(x, y, 'health');
+        for (var i = 1; i < this.health; i++) {
+            if (i % 5 == 0) {
+                y += 20;
+                x = 40;
+            } else {
+                x += 20;
+            }
+            this.healthBoxes[i] = this.scene.add.image(x, y, 'health');
+        }
+        this._sideStrike = this.scene.physics.add.sprite(600,400,'sideAttack', 1);
+        this._vertStrike = this.scene.physics.add.sprite(600,400,'vertAttack', 1);
+    }
+
     dealDamage(damage) {
-        if (this.health > 0) {
-            this.health = this.health - damage;
-            console.log('You have taken damage. Health: ' + this.health);
+        if (!this.stopDamage) {
+            this.stopDamage = true;
+            this.scene.time.delayedCall(600, () => {
+                this.justDamaged();
+              });
+            if (this.health > 0) {
+                this.health = this.health - damage;
+                this.healthBoxes[this.health].setTexture('healthEmpty');
+                console.log('You have taken damage. Health: ' + this.health);
+            }
+            if (this.health == 0) {
+                this.health--;
+                console.log('You are dead.');
+            }
         }
-        if (this.health == 0) {
-            this.health--;
-            console.log('You are dead.');
-        }
+    }
+
+    justDamaged() {
+        console.log('reactivating damage');
+        this.stopDamage = false;
     }
 }

@@ -13,10 +13,8 @@ class gameScene extends Phaser.Scene {
     preload()
     {
         console.log('gameScene Preload');
-        this.load.spritesheet('stickMan', 'assets/images/StickMan.png', { frameWidth: 50, frameHeight: 60 });
-        this.load.spritesheet('sideAttack', 'assets/images/SideAttack.png', { frameWidth: 100, frameHeight: 60 });
-        this.load.spritesheet('vertAttack', 'assets/images/VertAttack.png', { frameWidth: 50, frameHeight: 120 });
-        this.load.spritesheet('monster', 'assets/images/Monster.png', { frameWidth: 50, frameHeight: 60 });
+        Player.preload(this);
+        Monster.preload(this);
         this.load.image('forest','assets/images/forest.png');
 
         this._rock = new ActionObject();
@@ -36,8 +34,8 @@ class gameScene extends Phaser.Scene {
 
         this._player = new Player(this, 600,400);
         this._monster = new Monster(this, 800,100);
-        this._player.create(this);
-        this._monster.create(this);
+        this._player.create();
+        this._monster.create();
 
         this._cursors = this.input.keyboard.createCursorKeys();
 
@@ -47,10 +45,8 @@ class gameScene extends Phaser.Scene {
         this.physics.add.collider(this._monster, this._walls);
         this._monster.setCollideWorldBounds(true);
 
-        var hit = 0;
         this.physics.add.overlap(this._player, this._monster,
             function(_player, _monster) {
-                console.log(_monster.damagePoints);
                 _player.dealDamage(_monster.damagePoints);
             });
         

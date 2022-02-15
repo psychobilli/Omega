@@ -115,7 +115,7 @@ class gameScene_flatFile extends Phaser.Scene {
         });
 
         //Monster create
-        this._monster_sprite = this.physics.add.sprite(600,400,'monster');
+        this._monster_sprite = this.physics.add.sprite(800,100,'monster');
         this._beat = 0;
 
         this.anims.create({

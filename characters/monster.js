@@ -2,6 +2,7 @@ class Monster extends Phaser.Physics.Arcade.Sprite {
 
     constructor(scene, x, y) {
         super(scene, x, y, 'monster');
+        this.scene = scene;
         this.beat;
         this.damagePoints = 1;
 
@@ -9,43 +10,43 @@ class Monster extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
     }
 
-    preload(main) {
-
+    static preload(scene) {
+        scene.load.spritesheet('monster', 'assets/images/Monster.png', { frameWidth: 50, frameHeight: 60 });
     }
 
-    create(main) {
-        this._beat = 0;
+    create() {
+        this.beat = 0;
 
-        main.anims.create({
+        this.scene.anims.create({
             key: 'monsterleft',
-            frames: main.anims.generateFrameNumbers('monster', { start: 0, end: 2 }),
+            frames: this.scene.anims.generateFrameNumbers('monster', { start: 0, end: 2 }),
             frameRate: 10,
             repeat: -1
         });
 
-        main.anims.create({
+        this.scene.anims.create({
             key: 'monsterturn',
             frames: [ { key: 'monster', frame: 0 } ],
             frameRate: 10
         });
 
-        main.anims.create({
+        this.scene.anims.create({
             key: 'monsterright',
-            frames: main.anims.generateFrameNumbers('monster', { start: 3, end: 5 }),
+            frames: this.scene.anims.generateFrameNumbers('monster', { start: 3, end: 5 }),
             frameRate: 10,
             repeat: -1
         });
 
-        main.anims.create({
+        this.scene.anims.create({
             key: 'monsterupDown',
-            frames: main.anims.generateFrameNumbers('monster', { start: 6, end: 8 }),
+            frames: this.scene.anims.generateFrameNumbers('monster', { start: 6, end: 8 }),
             frameRate: 10,
             repeat: -1
         });
     }
 
     update() {
-        if (this._beat == 0) {
+        if (this.beat == 0) {
             var min = Math.ceil(0);
             var max = Math.floor(4);
             var next = Math.floor(Math.random() * (max - min) + min);
@@ -78,8 +79,8 @@ class Monster extends Phaser.Physics.Arcade.Sprite {
                     break;
             }
         }
-        this._beat++;
-        if (this._beat > 30)
-            this._beat = 0;
+        this.beat++;
+        if (this.beat > 30)
+            this.beat = 0;
     }
 }
