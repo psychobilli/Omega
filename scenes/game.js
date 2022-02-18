@@ -62,6 +62,13 @@ class gameScene extends Phaser.Scene {
         this._monster.update();
     }
 
+    gameEnd() {
+        console.log('game End');
+        this._player.destroy();
+        
+        this.add.text(400, 200, 'You have died.  Evil shall not prevail',  { font: "24px Arial" });
+    }
+
     exitGame() {
         this.scene.start('titleScene');
     }

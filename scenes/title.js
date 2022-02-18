@@ -1,15 +1,18 @@
 class titleScene extends Phaser.Scene {
 
     constructor() {
+        console.log('titleScene constructor');
         super({ key: 'titleScene', active: true });
     }
 
     preload() {
+        console.log('titleScene preload');
         this.load.image('background','assets/images/Start.png');
         this.load.image('startFlat','assets/images/Start_Flat.png');
     }
 
     create() {
+        console.log('titleScene create');
         this.add.text(100, 64, 'Stick Man',  { font: "32px Arial" });
         this.add.text(100, 96, 'The Ultimate Evil',  { font: "24px Arial" });
         const start = this.add.image(500, 250, 'background');

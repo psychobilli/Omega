@@ -5,6 +5,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene = scene;
         this.face = 3;
         this.health = 10;
+        this.damagePoints = 2;
         this.healthBoxes = [];
         this.stopDamage = false;
         this.timer;
@@ -13,6 +14,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
+        
+        this.on('destroy', () => {
+            this.removeAllListeners();
+        });
     }
 
     static preload(scene) {
@@ -82,66 +87,68 @@ class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(cursors) {
-        if (cursors.left.isDown)
-        {
-            this._face = 0;
-            this.setVelocityX(-160);
-            this.setVelocityY(0);
-
-            this.anims.play('left', true);
-        }
-        else if (cursors.right.isDown)
-        {
-            this._face = 1;
-            this.setVelocityX(160);
-            this.setVelocityY(0);
-
-            this.anims.play('right', true);
-        }
-        else if (cursors.up.isDown)
-        {
-            this._face = 2;
-            this.setVelocityX(0);
-            this.setVelocityY(-160);
-
-            this.anims.play('upDown',true);
-        }
-        else if (cursors.down.isDown)
-        {
-            this._face = 3;
-            this.setVelocityX(0);
-            this.setVelocityY(160);
-
-            this.anims.play('upDown',true);
-        } 
-        else
-        {
-            this.setVelocityX(0);
-            this.setVelocityY(0);
-
-            this.anims.play('turn');
-        }
-
-        if (cursors.space.isDown) 
-        {
-            switch(this._face) 
+        if (this.health > 0) {
+            if (cursors.left.isDown)
             {
-                case 0:
-                    this._sideStrike.setPosition(this.x - 20, this.y);
-                    this._sideStrike.anims.play('leftAtt');
-                    break;
-                case 1:
-                    this._sideStrike.setPosition(this.x + 20, this.y);
-                    this._sideStrike.anims.play('rightAtt');
-                    break;
-                case 2:
-                    this._vertStrike.setPosition(this.x, this.y - 40);
-                    this._vertStrike.anims.play('upAtt');
-                    break;
-                case 3:
-                    this._vertStrike.setPosition(this.x, this.y + 40);
-                    this._vertStrike.anims.play('downAtt');
-                    break;
+                this._face = 0;
+                this.setVelocityX(-160);
+                this.setVelocityY(0);
+
+                this.anims.play('left', true);
+            }
+            else if (cursors.right.isDown)
+            {
+                this._face = 1;
+                this.setVelocityX(160);
+                this.setVelocityY(0);
+
+                this.anims.play('right', true);
+            }
+            else if (cursors.up.isDown)
+            {
+                this._face = 2;
+                this.setVelocityX(0);
+                this.setVelocityY(-160);
+
+                this.anims.play('upDown',true);
+            }
+            else if (cursors.down.isDown)
+            {
+                this._face = 3;
+                this.setVelocityX(0);
+                this.setVelocityY(160);
+
+                this.anims.play('upDown',true);
+            } 
+            else
+            {
+                this.setVelocityX(0);
+                this.setVelocityY(0);
+
+                this.anims.play('turn');
+            }
+
+            if (cursors.space.isDown) 
+            {
+                switch(this._face) 
+                {
+                    case 0:
+                        this._sideStrike.setPosition(this.x - 20, this.y);
+                        this._sideStrike.anims.play('leftAtt');
+                        break;
+                    case 1:
+                        this._sideStrike.setPosition(this.x + 20, this.y);
+                        this._sideStrike.anims.play('rightAtt');
+                        break;
+                    case 2:
+                        this._vertStrike.setPosition(this.x, this.y - 40);
+                        this._vertStrike.anims.play('upAtt');
+                        break;
+                    case 3:
+                        this._vertStrike.setPosition(this.x, this.y + 40);
+                        this._vertStrike.anims.play('downAtt');
+                        break;
+                }
             }
         }
     }
@@ -176,7 +183,7 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             }
             if (this.health == 0) {
                 this.health--;
-                console.log('You are dead.');
+                this.scene.gameEnd();
             }
         }
     }
