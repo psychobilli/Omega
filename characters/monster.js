@@ -4,7 +4,10 @@ class Monster extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, 'monster');
         this.scene = scene;
         this.beat;
+        this.health = 4;
         this.damagePoints = 1;
+
+        this.stopDamage = false;
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -46,7 +49,7 @@ class Monster extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
-        if (this.beat == 0) {
+        if (this.beat == 0 && this.health > 0) {
             var min = Math.ceil(0);
             var max = Math.floor(4);
             var next = Math.floor(Math.random() * (max - min) + min);
@@ -80,7 +83,29 @@ class Monster extends Phaser.Physics.Arcade.Sprite {
             }
         }
         this.beat++;
-        if (this.beat > 30)
+        if (this.beat > 30 && this.health > 0)
             this.beat = 0;
+    }
+
+    dealDamage(damage) {
+        if (!this.stopDamage) {
+            this.stopDamage = true;
+            this.scene.time.delayedCall(600, () => {
+                this.justDamaged();
+              });
+            if (this.health > 0) {
+                this.health = this.health - damage;
+                console.log('Monster has taken damage. Health: ' + this.health);
+            }
+            if (this.health == 0) {
+                this.health--;
+                this.destroy();
+            }
+        }
+    }
+
+    justDamaged() {
+        console.log('reactivating damage');
+        this.stopDamage = false;
     }
 }

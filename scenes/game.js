@@ -49,6 +49,16 @@ class gameScene extends Phaser.Scene {
             function(_player, _monster) {
                 _player.dealDamage(_monster.damagePoints);
             });
+        this.physics.add.overlap(this._player, this._monster,
+            function(_player, _monster) {
+                if (_player._sideStrike.active)
+                    _monster.dealDamage(_player.damagePoints);
+            });
+        this.physics.add.overlap(this._player, this._monster,
+            function(_player, _monster) {
+                if (_player._vertStrike.active)
+                    _monster.dealDamage(_player.damagePoints);
+            });
         
         const exit = this.add.image(1000, 100, 'exit');
         exit.setInteractive();
@@ -63,7 +73,7 @@ class gameScene extends Phaser.Scene {
     }
 
     gameEnd() {
-        console.log('game End');
+        console.log('gameScene End');
         this._player.destroy();
         
         this.add.text(400, 200, 'You have died.  Evil shall not prevail',  { font: "24px Arial" });

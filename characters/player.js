@@ -5,9 +5,9 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene = scene;
         this.face = 3;
         this.health = 10;
-        this.damagePoints = 2;
         this.healthBoxes = [];
         this.stopDamage = false;
+        this.damagePoints = 2;
         this.timer;
         this.sideStrike;
         this.vertStrike;
@@ -30,6 +30,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     create() {
         this.setupHealthBar();
+        this._sideStrike = this.scene.physics.add.sprite(600,400,'sideAttack', 1);
+        this._vertStrike = this.scene.physics.add.sprite(600,400,'vertAttack', 1);
+        this._sideStrike.setActive(false);
+        this._vertStrike.setActive(false);
+        
         this.scene.anims.create({
             key: 'left',
             frames: this.scene.anims.generateFrameNumbers('stickMan', { start: 0, end: 1 }),
@@ -133,24 +138,37 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 switch(this._face) 
                 {
                     case 0:
-                        this._sideStrike.setPosition(this.x - 20, this.y);
-                        this._sideStrike.anims.play('leftAtt');
+                        this.animateAttack(
+                            this._sideStrike, this.x - 20, this.y, 'leftAtt'
+                        );
                         break;
                     case 1:
-                        this._sideStrike.setPosition(this.x + 20, this.y);
-                        this._sideStrike.anims.play('rightAtt');
+                        this.animateAttack(
+                            this._sideStrike, this.x + 20, this.y, 'rightAtt'
+                        );
                         break;
                     case 2:
-                        this._vertStrike.setPosition(this.x, this.y - 40);
-                        this._vertStrike.anims.play('upAtt');
+                        this.animateAttack(
+                            this._vertStrike, this.x, this.y - 40, 'upAtt'
+                        );
                         break;
                     case 3:
-                        this._vertStrike.setPosition(this.x, this.y + 40);
-                        this._vertStrike.anims.play('downAtt');
+                        this.animateAttack(
+                            this._vertStrike, this.x, this.y + 40, 'downAtt'
+                        );
                         break;
                 }
             }
         }
+    }
+
+    animateAttack(sprite, x, y, animStr) {
+        sprite.setActive(true);
+        sprite.setPosition(x, y);
+        sprite.anims.play(animStr);
+        this.scene.time.delayedCall(400, () => {
+            sprite.setActive(false);
+        });
     }
 
     setupHealthBar() {
@@ -166,8 +184,6 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             }
             this.healthBoxes[i] = this.scene.add.image(x, y, 'health');
         }
-        this._sideStrike = this.scene.physics.add.sprite(600,400,'sideAttack', 1);
-        this._vertStrike = this.scene.physics.add.sprite(600,400,'vertAttack', 1);
     }
 
     dealDamage(damage) {
