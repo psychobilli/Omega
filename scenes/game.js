@@ -8,6 +8,7 @@ class gameScene extends Phaser.Scene {
         this.rock;
         this.cursors;
         this.walls;
+        this.sprites;
     }
 
     preload()
@@ -26,6 +27,7 @@ class gameScene extends Phaser.Scene {
     create()
     {
         console.log('gameScene Create');
+        this.sprites = [];
         this.add.image(600,400,'forest');
         this._rock.create(600, 200); 
         this._walls = this.physics.add.staticGroup();
@@ -37,6 +39,13 @@ class gameScene extends Phaser.Scene {
         this._player.create();
         this._monster.create();
 
+        this.sprites.push(this._player);
+        for (var i = 0; i < this._player.subSprites.length; i++)
+            this.sprites.push(this._player.subSprites[i]);
+        this.sprites.push(this._monster);
+
+        this.defineSpritePhysics();
+
         this._cursors = this.input.keyboard.createCursorKeys();
 
         this._rock.addPush(this._player, this._cursors);
@@ -44,21 +53,6 @@ class gameScene extends Phaser.Scene {
         this.physics.add.collider(this._player, this._walls);
         this.physics.add.collider(this._monster, this._walls);
         this._monster.setCollideWorldBounds(true);
-
-        this.physics.add.overlap(this._player, this._monster,
-            function(_player, _monster) {
-                _player.dealDamage(_monster.damagePoints);
-            });
-        this.physics.add.overlap(this._player, this._monster,
-            function(_player, _monster) {
-                if (_player._sideStrike.active)
-                    _monster.dealDamage(_player.damagePoints);
-            });
-        this.physics.add.overlap(this._player, this._monster,
-            function(_player, _monster) {
-                if (_player._vertStrike.active)
-                    _monster.dealDamage(_player.damagePoints);
-            });
         
         const exit = this.add.image(1000, 100, 'exit');
         exit.setInteractive();
@@ -81,5 +75,29 @@ class gameScene extends Phaser.Scene {
 
     exitGame() {
         this.scene.start('titleScene');
+    }
+
+    defineSpritePhysics() {
+        for (var i = 0; i < factionsAtWar.length; i++) {
+            this.warringSprites(factionsAtWar[i].factionOne, factionsAtWar[i].factionTwo);
+            this.warringSprites(factionsAtWar[i].factionTwo, factionsAtWar[i].factionOne);
+        }
+    }
+
+    warringSprites(factionOne, factionTwo) {
+        for (var j = 0; j < this.sprites.length; j++) {
+            if (this.sprites[j].getContactDamage() && this.sprites[j].getFaction() == factionOne) {
+                for (var k = 0; k < this.sprites.length; k++) {
+                    if (this.sprites[k].getFaction() == factionTwo) {
+                        var spriteOne = this.sprites[j];
+                        var spriteTwo = this.sprites[k];
+                        this.physics.add.overlap(spriteOne, spriteTwo,
+                            function(_spriteOne, _spriteTwo) {
+                                _spriteTwo.dealDamage(_spriteOne.damagePoints);
+                            });
+                    }
+                }
+            }
+        }
     }
 }

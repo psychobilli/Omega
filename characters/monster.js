@@ -1,13 +1,15 @@
-class Monster extends Phaser.Physics.Arcade.Sprite {
+class Monster extends Sprite {
 
     constructor(scene, x, y) {
         super(scene, x, y, 'monster');
-        this.scene = scene;
         this.beat;
         this.health = 4;
         this.damagePoints = 1;
 
         this.stopDamage = false;
+
+        super.setFaction(factionsEnum.MONSTER);
+        super.setContactDamage(true);
 
         scene.add.existing(this);
         scene.physics.add.existing(this);

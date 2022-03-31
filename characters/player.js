@@ -1,16 +1,16 @@
-class Player extends Phaser.Physics.Arcade.Sprite {
+class Player extends Sprite {
 
     constructor(scene, x, y) {
         super(scene, x, y,'stickMan');
-        this.scene = scene;
         this.face = 3;
         this.health = 10;
         this.healthBoxes = [];
         this.stopDamage = false;
-        this.damagePoints = 2;
         this.timer;
         this.sideStrike;
         this.vertStrike;
+
+        super.setFaction(factionsEnum.PLAYER);
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -30,10 +30,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     create() {
         this.setupHealthBar();
-        this._sideStrike = this.scene.physics.add.sprite(600,400,'sideAttack', 1);
-        this._vertStrike = this.scene.physics.add.sprite(600,400,'vertAttack', 1);
-        this._sideStrike.setActive(false);
-        this._vertStrike.setActive(false);
+        this._sideStrike = this.createStrikes(this._sideStrike, 'sideAttack');
+        this._vertStrike = this.createStrikes(this._vertStrike, 'vertAttack');
+
+        this.subSprites = [this._sideStrike, this._vertStrike];
         
         this.scene.anims.create({
             key: 'left',
@@ -160,6 +160,20 @@ class Player extends Phaser.Physics.Arcade.Sprite {
                 }
             }
         }
+    }
+
+    createStrikes(attackSprite, texture) {
+        attackSprite = new Sprite(this.scene, 600, 400, texture);
+        attackSprite.setFrame(1);
+        attackSprite.setFaction(factionsEnum.PLAYER);
+        attackSprite.setContactDamage(true);
+        attackSprite.setActive(false);
+        attackSprite.damagePoints = 2;
+        
+        this.scene.add.existing(attackSprite);
+        this.scene.physics.add.existing(attackSprite);
+
+        return attackSprite;
     }
 
     animateAttack(sprite, x, y, animStr) {
