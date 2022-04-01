@@ -138,24 +138,32 @@ class Player extends Sprite {
                 switch(this._face) 
                 {
                     case 0:
-                        this.animateAttack(
-                            this._sideStrike, this.x - 20, this.y, 'leftAtt'
-                        );
+                        if (!this._sideStrike.active) {
+                            this.animateAttack(
+                                this._sideStrike, this.x - 20, this.y, 'leftAtt'
+                            );
+                        }
                         break;
                     case 1:
-                        this.animateAttack(
-                            this._sideStrike, this.x + 20, this.y, 'rightAtt'
-                        );
+                        if (!this._sideStrike.active) {
+                            this.animateAttack(
+                                this._sideStrike, this.x + 20, this.y, 'rightAtt'
+                            );
+                        }
                         break;
                     case 2:
-                        this.animateAttack(
-                            this._vertStrike, this.x, this.y - 40, 'upAtt'
-                        );
+                        if (!this._vertStrike.active) {
+                            this.animateAttack(
+                                this._vertStrike, this.x, this.y - 40, 'upAtt'
+                            );
+                        }
                         break;
                     case 3:
-                        this.animateAttack(
-                            this._vertStrike, this.x, this.y + 40, 'downAtt'
-                        );
+                        if (!this._vertStrike.active) {
+                            this.animateAttack(
+                                this._vertStrike, this.x, this.y + 40, 'downAtt'
+                            );
+                        }
                         break;
                 }
             }
@@ -176,10 +184,10 @@ class Player extends Sprite {
         return attackSprite;
     }
 
-    animateAttack(sprite, x, y, animStr) {
+    animateAttack(sprite, x, y, texture) {
         sprite.setActive(true);
         sprite.setPosition(x, y);
-        sprite.anims.play(animStr);
+        sprite.anims.play(texture);
         this.scene.time.delayedCall(400, () => {
             sprite.setActive(false);
         });

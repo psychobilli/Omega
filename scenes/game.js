@@ -93,7 +93,8 @@ class gameScene extends Phaser.Scene {
                         var spriteTwo = this.sprites[k];
                         this.physics.add.overlap(spriteOne, spriteTwo,
                             function(_spriteOne, _spriteTwo) {
-                                _spriteTwo.dealDamage(_spriteOne.damagePoints);
+                                if (_spriteOne.active)
+                                    _spriteTwo.dealDamage(_spriteOne.damagePoints);
                             });
                     }
                 }
