@@ -42,20 +42,28 @@ class mouseActions extends Phaser.Scene {
         // this.hex.setInteractive();
         // this.hex.on('pointerup', this.clickListener, this);
 
-        var testBoundingBox = new Phaser.GameObjects.Zone(this, 80, 80, 40, 40);
-        testBoundingBox.setInteractive();
-        testBoundingBox.on('pointerup', this.clickListener, this);
+        // /**Test Bounding Box */
+        // var testBoundingBox = new Phaser.GameObjects.Zone(this, 80, 80, 40, 40);
+        // testBoundingBox.setInteractive();
+        // testBoundingBox.on('pointerup', this.clickListener, this);
+
+        // const graphics = this.add.graphics();
+        // graphics.lineStyle(2, 0xffff00);
+        // graphics.strokeRect(testBoundingBox.x - 20, testBoundingBox.y - 20, 40, 40);
+        // /** End Test Bounding Box */
+
+        /**Framework Bounding Box */
+        var clickShapeBoxes = BoundingBoxes.getBoxes('clickShape');
+        var clickListenerBox = new Phaser.GameObjects.Zone(this, clickShapeBoxes[0][0], clickShapeBoxes[0][1], clickShapeBoxes[0][2], clickShapeBoxes[0][3]);
+        clickListenerBox.setInteractive();
+        clickListenerBox.on('pointerup', this.clickListener, this);
 
         const graphics = this.add.graphics();
         graphics.lineStyle(2, 0xffff00);
-        graphics.strokeRect(testBoundingBox.x - 20, testBoundingBox.y - 20, 40, 40);
-        //testBoundingBox.refresh();
-        // var clickShapeBoxes = BoundingBoxes.getBoxes('clickShape');
-        // var clickListenerBox = this.physics.add.staticGroup();
-        // clickListenerBox.create(clickShapeBoxes[0][0],clickShapeBoxes[0][1]).setScale(clickShapeBoxes[0][2],clickShapeBoxes[0][3]).refreshBody();
-        // console.log(clickListenerBox);
-        // clickListenerBox.setInteractive();
-        // clickListenerBox.on('pointerup', this.clickListener, this);
+        var graphic_x = clickShapeBoxes[0][0] - clickShapeBoxes[0][2] / 2; // this only works if the sides are parallel to the x-axis.
+        var graphic_y = clickShapeBoxes[0][1] - clickShapeBoxes[0][3] / 2; // a better calculation is to find the slope and figure out where the lines intersect
+        graphics.strokeRect(graphic_x, graphic_y, clickShapeBoxes[0][2], clickShapeBoxes[0][3]);
+        /**End Framework Bounding Box */
 
         this.text = this.add.text(800, 500, 'Move the mouse', { font: '16px Courier', fill: '#00ff00' });
     }
