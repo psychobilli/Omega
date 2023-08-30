@@ -11,6 +11,8 @@ class BoundingBoxes {
         
         var clickShape = [[80, 80, 40, 40],[80, 80, 40, 40],[80, 80, 40, 40]];
         BoundingBoxes.boundingBoxes.set('clickShape', clickShape);
+        var clickImage = [[160, 80, 40, 40],[160, 80, 40, 40],[160, 80, 40, 40]];
+        BoundingBoxes.boundingBoxes.set('clickImage', clickImage);
     }
 
     static getBoxes(identifier) {

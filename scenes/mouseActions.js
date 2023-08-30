@@ -1,6 +1,7 @@
 class mouseActions extends Phaser.Scene {
     
     text;
+    clickListenerImage;
 
     constructor() {
         console.log('mouseActions constructor');
@@ -9,11 +10,15 @@ class mouseActions extends Phaser.Scene {
         this.penta;
         this.hex;
         this.state = 0;
+
+        this.clickListenerImage;
     }
 
     preload() {
         console.log('mouseActions preload');
         this.load.image('exit','assets/images/Exit.png');
+
+        Prop.preload(this, 'clickListener');
     }
 
     create() {
@@ -60,10 +65,13 @@ class mouseActions extends Phaser.Scene {
 
         const graphics = this.add.graphics();
         graphics.lineStyle(2, 0xffff00);
-        var graphic_x = clickShapeBoxes[0][0] - clickShapeBoxes[0][2] / 2; // this only works if the sides are parallel to the x-axis.
-        var graphic_y = clickShapeBoxes[0][1] - clickShapeBoxes[0][3] / 2; // a better calculation is to find the slope and figure out where the lines intersect
+        var graphic_x = clickShapeBoxes[0][0] - clickShapeBoxes[0][2] / 2; // strokeRect and Zones use x,y coordinates differently
+        var graphic_y = clickShapeBoxes[0][1] - clickShapeBoxes[0][3] / 2; // strokeRect sets the top right corner, zones set the center
         graphics.strokeRect(graphic_x, graphic_y, clickShapeBoxes[0][2], clickShapeBoxes[0][3]);
         /**End Framework Bounding Box */
+
+        this.clickListenerImage = new Prop(this, 'clickListener', true);
+        this.clickListenerImage.create();
 
         this.text = this.add.text(800, 500, 'Move the mouse', { font: '16px Courier', fill: '#00ff00' });
     }
